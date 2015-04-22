@@ -26,12 +26,14 @@
       <div class="row" style="margin-left: 10px;">
         <div class="col-lg-8">
           <div class="input-group">
-            <input type="text" class="form-control"
-              placeholder="Pesquise por endereços ou coordenadas">
+            <span class="input-group-addon">From</span>
+            <input type="text" class="form-control" id="origin">
+            <span class="input-group-addon">To</span>
+            <input type="text" class="form-control" id="destination">
 
             <!-- triggers the search for a new location.  -->
             <span class="input-group-btn">
-              <button class="btn btn-primary" type="button">
+              <button class="btn btn-primary" type="button" id="search-route">
                 <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
               </button>
             </span>
@@ -41,34 +43,77 @@
       <!-- end search input -->
       <br>
    
-      <div class="col-lg-9">
-        <div id="googleMap" style="width:900px;height:400px;"></div>
-      </div>
-      
-      <div class="col-lg-3">
-        <label for="coordinates">Adicionar ponto ou rota</label>
-        <div class="input-group">
-          <input type="text" class="form-control" id="coordinates">
-          <span class="input-group-btn">
-            <button class="btn btn-success" type="button" id="add-coordinates">
-              <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
-            </button>
-          </span>
+      <div class="row">
+        <div class="col-lg-9">
+          <div id="googleMap" style="width:900px;height:400px;"></div>
+        </div>
+        
+        <div class="col-lg-3">
+          <label for="coordinates">Adicionar ponto ou rota</label>
+          <div class="input-group">
+            <input type="text" class="form-control" id="coordinates">
+            <span class="input-group-btn">
+              <button class="btn btn-success" type="button" id="add-coordinates">
+                <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+              </button>
+            </span>
+          </div>
+        </div>
+
+        <div class="col-lg-3">
+          <label for="bounding-box">Adicionar área</label>
+          <div class="input-group">
+            <input type="text" class="form-control" id="bounding-box">
+            <span class="input-group-btn">
+              <button class="btn btn-success" type="button"  id="add-bounding-box">
+                <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+              </button>
+            </span>
+          </div>
+        </div>
+
+        <div class="col-lg-3">
+          <label for="route-steps">Passos</label>
+          <textarea class="form-control" rows="10" id="route-steps"></textarea>
         </div>
       </div>
 
-      <div class="col-lg-3">
-        <label for="bounding-box">Adicionar área</label>
-        <div class="input-group">
-          <input type="text" class="form-control" id="bounding-box">
-          <span class="input-group-btn">
-            <button class="btn btn-success" type="button"  id="add-bounding-box">
-              <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
-            </button>
-          </span>
+      <div class="row">
+        <!-- Tabela de bounding boxes --> 
+        <div class="col-lg-3">
+          <label for="bounding-box-info">Áreas</label>
+          <table class="table table-bordered table-condensed fixed-table" id="bounding-box-info">
+            <thead>
+              <tr>
+                <th>Pontos</th>
+                <th>Cor</th>
+              </tr>
+            </thead>
+            <tbody>
+            </tbody>
+          </table>
+        </div>
+        <!-- Fim tabela de bounding boxes --> 
+
+        <!-- Tabela de rotas --> 
+        <div class="col-lg-3">
+          <label for="routes-info">Rotas</label>
+          <table class="table table-bordered table-condensed fixed-table" id="routes-info">
+            <thead>
+              <tr>
+                <th>Pontos</th>
+                <th>Cor</th>
+                <th>Núm. de Pontos</th>
+              </tr>
+            </thead>
+            <tbody>
+            </tbody>
+          </table>
+        </div>
+        <!-- Fim tabela de rotas --> 
+
         </div>
       </div>
-
 
     <script src="http://maps.googleapis.com/maps/api/js"></script>
 
