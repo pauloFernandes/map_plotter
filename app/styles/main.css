@@ -87,3 +87,21 @@ body {
     border-bottom: 0;
   }
 }
+
+
+.row {
+  margin-left: 10px;
+  margin-right: 10px;
+  margin-top: 5px;
+}
+
+table.fixed-table {
+  width: 100%;
+  table-layout: fixed;
+}
+
+table.fixed-table td {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}

@@ -50,6 +50,16 @@ var createRoutesElement = function(coordinates, settings) {
   $('#routes-info > tbody').append($(html));
 };
 
+var isValidJson = function(jsonStr) {
+  try {
+    JSON.parse(jsonStr);
+  } catch(e) {
+    return false;
+  }
+
+  return true;
+};
+
 $('#coordinates').tokenfield({
   delimiter: ';'
 });
@@ -59,11 +69,20 @@ $('#bounding-box').tokenfield({
 });
 
 $('#add-coordinates').click(function() {
-  var coordinates = $('#coordinates').val().split('; ').map(function(coordinate) {
-    coordinate = coordinate.split(',');
-    addMarkerToMap(coordinate[0], coordinate[1]);
-    return createPosition(coordinate[0], coordinate[1]);
-  });
+  var coordinates = null;
+  var $coordinates = $('#coordinates').val();
+  if (isValidJson($coordinates)) {
+    coordinates = JSON.parse($coordinates).map(function(coordinate) {
+      addMarkerToMap(coordinate.lat, coordinate.lng);
+      return createPosition(coordinate.lat, coordinate.lng);
+    });
+  } else {
+    coordinates = $coordinates.replace(/[\(|\)]/g, '').split('; ').map(function(coordinate) {
+      coordinate = coordinate.split(',');
+      addMarkerToMap(coordinate[0], coordinate[1]);
+      return createPosition(coordinate[0], coordinate[1]);
+    });
+  }
 
   var color = getRandomColor();
   addPolyline(coordinates, {color: color});
@@ -73,10 +92,21 @@ $('#add-coordinates').click(function() {
 });
 
 $('#add-bounding-box').click(function() {
-  var coordinates = $('#bounding-box').val().split('; ').map(function(coordinate) {
-    coordinate = coordinate.split(',');
-    return createPosition(coordinate[0], coordinate[1]);
-  });
+  var coordinates = null;
+  var $boundingBox = $('#bounding-box').val();
+
+  if (isValidJson($boundingBox)) {
+    coordinates = JSON.parse($boundingBox).map(function(coordinate) {
+      coordinate = coordinate.split(',');
+      return createPosition(coordinate.lat, coordinate.lng);
+    });
+  } else {
+    coordinates = $boundingBox.replace(/[\(|\)]/g, '').split('; ').map(function(coordinate) {
+      coordinate = coordinate.split(',');
+      return createPosition(coordinate[0], coordinate[1]);
+    });
+  }
+  
 
   coordinates.push(coordinates[0]);
 
@@ -90,8 +120,15 @@ $('#add-bounding-box').click(function() {
 $('#search-route').click(function() {
   var origin      = $('#origin').val();
   var destination = $('#destination').val();
-  calcRoute(origin, destination, function(steps) {
-    var result = steps.map(function(i) {
+  calcRoute(origin, destination, function(steps, minSteps) {
+    var allSteps = steps.map(function(i) {
+      return {
+        lat: i.lat(),
+        lng: i.lng()
+      }
+    });
+
+    var reducedSteps = minSteps.map(function(i) {
       return {
         lat: i.lat(),
         lng: i.lng()
@@ -99,6 +136,7 @@ $('#search-route').click(function() {
     });
 
     createRoutesElement(steps, {color: null});
-    $('#route-steps').val(JSON.stringify(result));
+    $('#route-steps').val(JSON.stringify(allSteps));
+    $('#reduced-route-steps').val(JSON.stringify(reducedSteps));
   });
 });

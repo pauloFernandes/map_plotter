@@ -2,6 +2,7 @@
 
 var map = {};
 var steps = [];
+var minSteps = [];
 var home = new google.maps.LatLng(-19.9513211,-43.9214686);
 var directionsService = new google.maps.DirectionsService();
 var directionsDisplay = new google.maps.DirectionsRenderer();
@@ -72,12 +73,15 @@ var calcRoute = function(origin, destination, callback) {
 
   directionsService.route(request, function(result, status) {
     if (status === google.maps.DirectionsStatus.OK) {
-      // console.log(result)
-      // console.log(result.routes[0].overview_path)
-      // console.log(result.routes[0].legs[0].steps)
       directionsDisplay.setDirections(result);
+      
       steps = result.routes[0].overview_path;
-      callback(steps);
+
+      var legsSteps = result.routes[0].legs[0].steps;
+      minSteps = legsSteps.map(function(i) {return i.start_point});
+      minSteps.push(legsSteps[legsSteps.length -1].end_point);
+      
+      callback(steps, minSteps);
     }
   });
 };
